@@ -7,7 +7,7 @@
 **License:** [Apache 2.0](https://github.com/apache/incubator-zeppelin/blob/master/LICENSE)
 
 
-**Zeppelin**, a web-based notebook that enables interactive data analytics. You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more.
+**Zeppelin**, a web-based notebook that enables interactive data analytics. You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more. This pull request improves zepplin to make the paragraphs to execute in sequencial order from top to buttom. This feature can be used as the ETL for cleansing data.
 
 Core feature:
    * Web based notebook style editor.
