@@ -1,4 +1,3 @@
-/* global $:false */
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +14,30 @@
 
 'use strict';
 
-angular.module('zeppelinWebApp').controller('NavCtrl', function($scope, $rootScope, $routeParams, notebookListDataFactory, websocketMsgSrv, arrayOrderingSrv) {
+angular.module('zeppelinWebApp').controller('NavCtrl', function($scope, $rootScope, $http, $routeParams,
+    $location, notebookListDataFactory, baseUrlSrv, websocketMsgSrv, arrayOrderingSrv) {
   /** Current list of notes (ids) */
+
+  $scope.showLoginWindow = function() {
+    setTimeout(function() {
+      angular.element('#userName').focus();
+    }, 500);
+  };
 
   var vm = this;
   vm.notes = notebookListDataFactory;
   vm.connected = websocketMsgSrv.isConnected();
   vm.websocketMsgSrv = websocketMsgSrv;
   vm.arrayOrderingSrv = arrayOrderingSrv;
-  
-  $('#notebook-list').perfectScrollbar({suppressScrollX: true});
-  
+  if ($rootScope.ticket) {
+    $rootScope.fullUsername = $rootScope.ticket.principal;
+    $rootScope.truncatedUsername = $rootScope.ticket.principal;
+  }
+
+  var MAX_USERNAME_LENGTH=16;
+
+  angular.element('#notebook-list').perfectScrollbar({suppressScrollX: true});
+
   $scope.$on('setNoteMenu', function(event, notes) {
     notebookListDataFactory.setNotes(notes);
   });
@@ -33,6 +45,52 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function($scope, $rootSco
   $scope.$on('setConnectedStatus', function(event, param) {
     vm.connected = param;
   });
+
+  $rootScope.$on('$locationChangeSuccess', function () {
+    var path = $location.path();
+    // hacky solution to clear search bar
+    // TODO(felizbear): figure out how to make ng-click work in navbar
+    if (path === '/') {
+      $scope.searchTerm = '';
+    }
+  });
+
+  $scope.checkUsername = function () {
+    if ($rootScope.ticket) {
+      if ($rootScope.ticket.principal.length <= MAX_USERNAME_LENGTH) {
+        $rootScope.truncatedUsername = $rootScope.ticket.principal;
+      }
+      else {
+        $rootScope.truncatedUsername = $rootScope.ticket.principal.substr(0, MAX_USERNAME_LENGTH) + '..';
+      }
+    }
+  };
+
+  $scope.$on('loginSuccess', function(event, param) {
+    $scope.checkUsername();
+    loadNotes();
+  });
+  
+  $scope.logout = function() {
+    $http.post(baseUrlSrv.getRestApiBase()+'/login/logout').
+      success(function(data, status, headers, config) {
+        $rootScope.userName = '';
+        $rootScope.ticket.principal = '';
+        $rootScope.ticket.ticket = '';
+        $rootScope.ticket.roles = '';
+        BootstrapDialog.show({
+           message: 'Logout Success'
+        });
+      }).
+      error(function(data, status, headers, config) {
+        console.log('Error %o %o', status, data.message);
+      });
+    
+  };
+
+  $scope.search = function() {
+    $location.url(/search/ + $scope.searchTerm);
+  };
 
   function loadNotes() {
     websocketMsgSrv.getNotebookList();
@@ -46,5 +104,6 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function($scope, $rootSco
   vm.isActive = isActive;
 
   vm.loadNotes();
+  $scope.checkUsername();
 
 });

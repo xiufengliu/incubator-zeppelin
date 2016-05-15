@@ -29,20 +29,23 @@ module.exports = function(config) {
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/angular-route/angular-route.js',
+      'bower_components/angular-resource/angular-resource.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-websocket/angular-websocket.min.js',
       'bower_components/ace-builds/src-noconflict/ace.js',
       'bower_components/ace-builds/src-noconflict/mode-scala.js',
+      'bower_components/ace-builds/src-noconflict/mode-python.js',
       'bower_components/ace-builds/src-noconflict/mode-sql.js',
       'bower_components/ace-builds/src-noconflict/mode-markdown.js',
       'bower_components/ace-builds/src-noconflict/mode-sh.js',
+      'bower_components/ace-builds/src-noconflict/mode-r.js',
       'bower_components/ace-builds/src-noconflict/keybinding-emacs.js',
       'bower_components/ace-builds/src-noconflict/ext-language_tools.js',
       'bower_components/ace-builds/src-noconflict/theme-chrome.js',
       'bower_components/angular-ui-ace/ui-ace.js',
       'bower_components/jquery.scrollTo/jquery.scrollTo.js',
       'bower_components/d3/d3.js',
-      'bower_components/nvd3/nv.d3.js',
+      'bower_components/nvd3/build/nv.d3.js',
       'bower_components/jquery-ui/jquery-ui.js',
       'bower_components/angular-dragdrop/src/angular-dragdrop.js',
       'bower_components/perfect-scrollbar/src/perfect-scrollbar.js',
@@ -54,11 +57,24 @@ module.exports = function(config) {
       'bower_components/lodash/lodash.js',
       'bower_components/angular-filter/dist/angular-filter.min.js',
       'bower_components/ngtoast/dist/ngToast.js',
+      'bower_components/ng-focus-if/focusIf.js',
+      'bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js',
+      'bower_components/floatThead/dist/jquery.floatThead.js',
+      'bower_components/floatThead/dist/jquery.floatThead.min.js',
+      'bower_components/datatables.net/js/jquery.dataTables.js',
+      'bower_components/datatables.net-bs/js/dataTables.bootstrap.js',
+      'bower_components/datatables.net-buttons/js/dataTables.buttons.js',
+      'bower_components/datatables.net-buttons/js/buttons.colVis.js',
+      'bower_components/datatables.net-buttons/js/buttons.flash.js',
+      'bower_components/datatables.net-buttons/js/buttons.html5.js',
+      'bower_components/datatables.net-buttons/js/buttons.print.js',
+      'bower_components/datatables.net-buttons-bs/js/buttons.bootstrap.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'src/app/app.js',
       'src/app/app.controller.js',
       'src/app/**/*.js',
+      'src/components/**/*.js',
       'test/spec/**/*.js'
     ],
 
@@ -80,10 +96,23 @@ module.exports = function(config) {
       'PhantomJS'
     ],
 
+    reporters: ['coverage','progress'],
+
+    preprocessors: {
+      'src/*/{*.js,!(test)/**/*.js}': 'coverage'
+    },
+
+    coverageReporter: {
+      type: 'html',
+      dir: '../reports/zeppelin-web-coverage',
+      subdir: '.'
+    },
+
     // Which plugins to enable
     plugins: [
       'karma-phantomjs-launcher',
-      'karma-jasmine'
+      'karma-jasmine',
+      'karma-coverage'
     ],
 
     // Continuous Integration mode

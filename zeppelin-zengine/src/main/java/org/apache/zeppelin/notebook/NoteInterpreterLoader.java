@@ -29,10 +29,11 @@ import org.apache.zeppelin.interpreter.InterpreterGroup;
 import org.apache.zeppelin.interpreter.InterpreterSetting;
 
 /**
- * Repl loader per note.
+ * Interpreter loader per note.
  */
 public class NoteInterpreterLoader {
   private transient InterpreterFactory factory;
+  private static String SHARED_SESSION = "shared_session";
   String noteId;
 
   public NoteInterpreterLoader(InterpreterFactory factory) {
@@ -73,6 +74,39 @@ public class NoteInterpreterLoader {
     return settings;
   }
 
+  private String getInterpreterInstanceKey(InterpreterSetting setting) {
+    if (setting.getOption().isPerNoteSession() || setting.getOption().isPerNoteProcess()) {
+      return noteId;
+    } else {
+      return SHARED_SESSION;
+    }
+  }
+
+  private List<Interpreter> createOrGetInterpreterList(InterpreterSetting setting) {
+    InterpreterGroup interpreterGroup =
+        setting.getInterpreterGroup(noteId);
+    synchronized (interpreterGroup) {
+      String key = getInterpreterInstanceKey(setting);
+      if (!interpreterGroup.containsKey(key)) {
+        factory.createInterpretersForNote(setting, noteId, key);
+      }
+      return interpreterGroup.get(getInterpreterInstanceKey(setting));
+    }
+  }
+
+  public void close() {
+    // close interpreters in this note session
+    List<InterpreterSetting> settings = this.getInterpreterSettings();
+    if (settings == null || settings.size() == 0) {
+      return;
+    }
+
+    System.err.println("close");
+    for (InterpreterSetting setting : settings) {
+      factory.removeInterpretersForNote(setting, noteId);
+    }
+  }
+
   public Interpreter get(String replName) {
     List<InterpreterSetting> settings = getInterpreterSettings();
 
@@ -81,7 +115,9 @@ public class NoteInterpreterLoader {
     }
 
     if (replName == null || replName.trim().length() == 0) {
-      return settings.get(0).getInterpreterGroup().getFirst();
+      // get default settings (first available)
+      InterpreterSetting defaultSettings = settings.get(0);
+      return createOrGetInterpreterList(defaultSettings).get(0);
     }
 
     if (Interpreter.registeredInterpreters == null) {
@@ -104,43 +140,47 @@ public class NoteInterpreterLoader {
       String interpreterClassName = registeredInterpreter.getClassName();
 
       for (InterpreterSetting setting : settings) {
-        InterpreterGroup intpGroup = setting.getInterpreterGroup();
-        for (Interpreter interpreter : intpGroup) {
-          if (interpreterClassName.equals(interpreter.getClassName())) {
-            return interpreter;
+        if (registeredInterpreter.getGroup().equals(setting.getGroup())) {
+          List<Interpreter> intpGroup = createOrGetInterpreterList(setting);
+          for (Interpreter interpreter : intpGroup) {
+            if (interpreterClassName.equals(interpreter.getClassName())) {
+              return interpreter;
+            }
           }
         }
       }
+      throw new InterpreterException(replName + " interpreter not found");
     } else {
       // first assume replName is 'name' of interpreter. ('groupName' is ommitted)
       // search 'name' from first (default) interpreter group
-      InterpreterGroup intpGroup = settings.get(0).getInterpreterGroup();
-      for (Interpreter interpreter : intpGroup) {
-        RegisteredInterpreter intp = Interpreter
-            .findRegisteredInterpreterByClassName(interpreter.getClassName());
-        if (intp == null) {
-          continue;
+      InterpreterSetting defaultSetting = settings.get(0);
+      Interpreter.RegisteredInterpreter registeredInterpreter =
+          Interpreter.registeredInterpreters.get(defaultSetting.getGroup() + "." + replName);
+      if (registeredInterpreter != null) {
+        List<Interpreter> interpreters = createOrGetInterpreterList(defaultSetting);
+        for (Interpreter interpreter : interpreters) {
+
+          RegisteredInterpreter intp =
+              Interpreter.findRegisteredInterpreterByClassName(interpreter.getClassName());
+          if (intp == null) {
+            continue;
+          }
+
+          if (intp.getName().equals(replName)) {
+            return interpreter;
+          }
         }
 
-        if (intp.getName().equals(replName)) {
-          return interpreter;
-        }
+        throw new InterpreterException(
+            defaultSetting.getGroup() + "." + replName + " interpreter not found");
       }
-
 
       // next, assume replName is 'group' of interpreter ('name' is ommitted)
       // search interpreter group and return first interpreter.
       for (InterpreterSetting setting : settings) {
-        intpGroup = setting.getInterpreterGroup();
-        Interpreter interpreter = intpGroup.get(0);
-        RegisteredInterpreter intp = Interpreter
-            .findRegisteredInterpreterByClassName(interpreter.getClassName());
-        if (intp == null) {
-          continue;
-        }
-
-        if (intp.getGroup().equals(replName)) {
-          return interpreter;
+        if (setting.getGroup().equals(replName)) {
+          List<Interpreter> interpreters = createOrGetInterpreterList(setting);
+          return interpreters.get(0);
         }
       }
     }
