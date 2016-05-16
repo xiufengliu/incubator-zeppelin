@@ -84,6 +84,7 @@ public class Note implements Serializable, JobListener {
    */
   private Map<String, Object> info = new HashMap<>();
 
+  List<Paragraph> queue = new LinkedList<Paragraph>(); // Added by Xiufeng Liu
 
   public Note() {}
 
@@ -363,6 +364,33 @@ public class Note implements Serializable, JobListener {
         intp.getScheduler().submit(p);
       }
     }
+  }
+
+  public void runAllInOrder() {// Added by Xiufeng Liu
+    synchronized (paragraphs) {
+      queue.clear();
+      for (Paragraph p : paragraphs) {
+        queue.add(p);
+      }
+      this.runNextParagraph();
+    }
+  }
+
+  public void runNextParagraph() { // Added by Xiufeng Liu
+    if (queue.size() > 0) {
+      Paragraph p = queue.remove(0);
+      p.setNoteReplLoader(replLoader);
+      p.setListener(jobListenerFactory.getParagraphJobListener(this));
+      Interpreter intp = replLoader.get(p.getRequiredReplName());
+      if (intp == null) {
+        throw new InterpreterException("Interpreter " + p.getRequiredReplName() + " not found");
+      }
+      intp.getScheduler().submit(p);
+    }
+  }
+
+  public void clearAll() { // Added by Xiufeng Liu
+    queue.clear();
   }
 
   /**

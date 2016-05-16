@@ -85,6 +85,7 @@ public class ZeppelinServer extends Application {
             notebookIndex, notebookAuthorization);
   }
 
+
   public static void main(String[] args) throws InterruptedException {
 
     ZeppelinConfiguration conf = ZeppelinConfiguration.create();

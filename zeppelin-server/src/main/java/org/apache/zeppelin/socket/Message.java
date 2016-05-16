@@ -58,6 +58,7 @@ public class Message {
                   // @param paragraph paragraph content.ie. script
                   // @param config paragraph config
                   // @param params paragraph params
+    RUN_NOTE_PARAGRAPHS, //Added by Xiufeng Liu
 
     COMMIT_PARAGRAPH, // [c-s] commit paragraph
                       // @param id paragraph id
