@@ -10,7 +10,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by xiuli on 11/12/15.

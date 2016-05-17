@@ -218,8 +218,9 @@ public class NotebookRestApi {
   @GET
   @Path("/")
   public Response getNotebookList() throws IOException {
-    List<Map<String, String>> notesInfo = notebookServer.generateNotebooksInfo(false);
-    return new JsonResponse<>(Status.OK, "", notesInfo ).build();
+    /*List<Map<String, String>> notesInfo = notebookServer.generateNotebooksInfo(false);
+    return new JsonResponse<>(Status.OK, "", notesInfo ).build();*/
+    return null;
   }
 
   @GET
@@ -271,6 +272,7 @@ public class NotebookRestApi {
   @Path("/")
   public Response createNote(String message) throws IOException {
     LOG.info("Create new notebook by JSON {}" , message);
+    /*
     NewNotebookRequest request = gson.fromJson(message,
         NewNotebookRequest.class);
     Note note = notebook.createNote();
@@ -291,7 +293,8 @@ public class NotebookRestApi {
     note.persist();
     notebookServer.broadcastNote(note);
     notebookServer.broadcastNoteList();
-    return new JsonResponse<>(Status.CREATED, "", note.getId() ).build();
+    return new JsonResponse<>(Status.CREATED, "", note.getId() ).build();*/
+    return null;
   }
 
   /**
@@ -304,14 +307,16 @@ public class NotebookRestApi {
   @Path("{notebookId}")
   public Response deleteNote(@PathParam("notebookId") String notebookId) throws IOException {
     LOG.info("Delete notebook {} ", notebookId);
-    if (!(notebookId.isEmpty())) {
+
+    /*if (!(notebookId.isEmpty())) {
       Note note = notebook.getNote(notebookId);
       if (note != null) {
         notebook.removeNote(notebookId);
       }
     }
     notebookServer.broadcastNoteList();
-    return new JsonResponse<>(Status.OK, "").build();
+    return new JsonResponse<>(Status.OK, "").build();*/
+    return null;
   }
   
   /**
@@ -325,13 +330,15 @@ public class NotebookRestApi {
   public Response cloneNote(@PathParam("notebookId") String notebookId, String message) throws
       IOException, CloneNotSupportedException, IllegalArgumentException {
     LOG.info("clone notebook by JSON {}" , message);
-    NewNotebookRequest request = gson.fromJson(message,
+
+    /*NewNotebookRequest request = gson.fromJson(message,
         NewNotebookRequest.class);
     String newNoteName = request.getName();
     Note newNote = notebook.cloneNote(notebookId, newNoteName);
     notebookServer.broadcastNote(newNote);
     notebookServer.broadcastNoteList();
-    return new JsonResponse<>(Status.CREATED, "", newNote.getId()).build();
+    return new JsonResponse<>(Status.CREATED, "", newNote.getId()).build();*/
+    return null;
   }
 
   /**

@@ -482,6 +482,12 @@ angular.module('zeppelinWebApp')
     $scope.dirtyText = undefined;
   };
 
+  $scope.runNoteParagraphs = function(data) { // Added by Xiufeng Liu
+      websocketMsgSrv.runNoteParagraphs($scope.paragraph.id, $scope.paragraph.title,
+        data, $scope.paragraph.config, $scope.paragraph.settings.params);
+      $scope.dirtyText = undefined;
+  };
+
   $scope.saveParagraph = function(){
     if($scope.dirtyText === undefined || $scope.dirtyText === $scope.originalText){
       return;

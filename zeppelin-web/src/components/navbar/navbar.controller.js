@@ -70,7 +70,7 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function($scope, $rootSco
     $scope.checkUsername();
     loadNotes();
   });
-  
+
   $scope.logout = function() {
     $http.post(baseUrlSrv.getRestApiBase()+'/login/logout').
       success(function(data, status, headers, config) {
@@ -78,19 +78,21 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function($scope, $rootSco
         $rootScope.ticket.principal = '';
         $rootScope.ticket.ticket = '';
         $rootScope.ticket.roles = '';
-        BootstrapDialog.show({
+        /*BootstrapDialog.show({
            message: 'Logout Success'
-        });
+        });*/
       }).
       error(function(data, status, headers, config) {
         console.log('Error %o %o', status, data.message);
       });
-    
+      $location.path('/');
   };
 
   $scope.search = function() {
     $location.url(/search/ + $scope.searchTerm);
   };
+
+
 
   function loadNotes() {
     websocketMsgSrv.getNotebookList();
@@ -99,6 +101,8 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function($scope, $rootSco
   function isActive(noteId) {
     return ($routeParams.noteId === noteId);
   }
+
+
 
   vm.loadNotes = loadNotes;
   vm.isActive = isActive;

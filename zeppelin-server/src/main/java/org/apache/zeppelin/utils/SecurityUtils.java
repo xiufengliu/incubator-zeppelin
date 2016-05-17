@@ -54,7 +54,6 @@ public class SecurityUtils {
    */
   public static String getPrincipal() {
     Subject subject = org.apache.shiro.SecurityUtils.getSubject();
-
     String principal;
     if (subject.isAuthenticated()) {
       principal = subject.getPrincipal().toString();
@@ -72,10 +71,11 @@ public class SecurityUtils {
    */
   public static HashSet<String> getRoles() {
     Subject subject = org.apache.shiro.SecurityUtils.getSubject();
+
     HashSet<String> roles = new HashSet<>();
 
     if (subject.isAuthenticated()) {
-      for (String role : Arrays.asList("role1", "role2", "role3")) {
+      for (String role : Arrays.asList("all", "role1", "role2", "role3")) {
         if (subject.hasRole(role)) {
           roles.add(role);
         }
@@ -83,5 +83,4 @@ public class SecurityUtils {
     }
     return roles;
   }
-
 }

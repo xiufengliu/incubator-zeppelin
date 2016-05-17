@@ -1,8 +1,12 @@
 {
   "paragraphs": [
     {
-      "text": "%md\n## Welcome to Zeppelin.\n##### This is a live tutorial, you can run the code yourself. (Shift-Enter to Run)",
-      "dateUpdated": "May 14, 2016 11:19:37 PM",
+      "text": "%md\n## Welcome to CITIES Data.\n##### This is a live tutorial, you can run the code yourself. (Shift-Enter to Run)",
+      "authenticationInfo": {
+        "user": "admin",
+        "ticket": "13824704-9cdc-412a-9f26-2ea2cfc3a633"
+      },
+      "dateUpdated": "May 17, 2016 8:21:00 AM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -28,19 +32,22 @@
       "result": {
         "code": "SUCCESS",
         "type": "HTML",
-        "msg": "\u003ch2\u003eWelcome to Zeppelin.\u003c/h2\u003e\n\u003ch5\u003eThis is a live tutorial, you can run the code yourself. (Shift-Enter to Run)\u003c/h5\u003e\n"
+        "msg": "\u003ch2\u003eWelcome to CITIES Data.\u003c/h2\u003e\n\u003ch5\u003eThis is a live tutorial, you can run the code yourself. (Shift-Enter to Run)\u003c/h5\u003e\n"
       },
       "dateCreated": "Feb 13, 2015 11:16:21 PM",
-      "dateStarted": "Apr 1, 2015 9:11:09 PM",
-      "dateFinished": "Apr 1, 2015 9:11:10 PM",
+      "dateStarted": "May 17, 2016 8:21:00 AM",
+      "dateFinished": "May 17, 2016 8:21:01 AM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Load data into table",
       "text": "import org.apache.commons.io.IOUtils\nimport java.net.URL\nimport java.nio.charset.Charset\n\n// Zeppelin creates and injects sc (SparkContext) and sqlContext (HiveContext or SqlContext)\n// So you don\u0027t need create them manually\n\n// load bank data\nval bankText \u003d sc.parallelize(\n    IOUtils.toString(\n        new URL(\"https://s3.amazonaws.com/apache-zeppelin/tutorial/bank/bank.csv\"),\n        Charset.forName(\"utf8\")).split(\"\\n\"))\n\ncase class Bank(age: Integer, job: String, marital: String, education: String, balance: Integer)\n\nval bank \u003d bankText.map(s \u003d\u003e s.split(\";\")).filter(s \u003d\u003e s(0) !\u003d \"\\\"age\\\"\").map(\n    s \u003d\u003e Bank(s(0).toInt, \n            s(1).replaceAll(\"\\\"\", \"\"),\n            s(2).replaceAll(\"\\\"\", \"\"),\n            s(3).replaceAll(\"\\\"\", \"\"),\n            s(5).replaceAll(\"\\\"\", \"\").toInt\n        )\n).toDF()\nbank.registerTempTable(\"bank\")",
-      "authenticationInfo": {},
-      "dateUpdated": "May 14, 2016 11:19:37 PM",
+      "authenticationInfo": {
+        "user": "user2",
+        "ticket": "a427f49c-1717-4902-af4b-8d57ba013bb2"
+      },
+      "dateUpdated": "May 16, 2016 10:14:59 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -67,18 +74,18 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "import org.apache.commons.io.IOUtils\nimport java.net.URL\nimport java.nio.charset.Charset\nbankText: org.apache.spark.rdd.RDD[String] \u003d ParallelCollectionRDD[0] at parallelize at \u003cconsole\u003e:32\ndefined class Bank\nbank: org.apache.spark.sql.DataFrame \u003d [age: int, job: string, marital: string, education: string, balance: int]\n"
+        "msg": "import org.apache.commons.io.IOUtils\nimport java.net.URL\nimport java.nio.charset.Charset\nbankText: org.apache.spark.rdd.RDD[String] \u003d ParallelCollectionRDD[5] at parallelize at \u003cconsole\u003e:36\ndefined class Bank\nbank: org.apache.spark.sql.DataFrame \u003d [age: int, job: string, marital: string, education: string, balance: int]\n"
       },
       "dateCreated": "Feb 10, 2015 1:52:59 AM",
-      "dateStarted": "May 14, 2016 11:16:44 PM",
-      "dateFinished": "May 14, 2016 11:17:18 PM",
+      "dateStarted": "May 16, 2016 10:15:00 PM",
+      "dateFinished": "May 16, 2016 10:15:04 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%sql \nselect age, count(1) value\nfrom bank \nwhere age \u003c 30 \ngroup by age \norder by age",
       "authenticationInfo": {},
-      "dateUpdated": "May 14, 2016 11:19:37 PM",
+      "dateUpdated": "May 16, 2016 10:14:59 PM",
       "config": {
         "colWidth": 4.0,
         "graph": {
@@ -115,7 +122,8 @@
         },
         "enabled": true,
         "tableHide": false,
-        "editorHide": true
+        "editorHide": true,
+        "editorMode": "ace/mode/sql"
       },
       "settings": {
         "params": {},
@@ -129,15 +137,15 @@
         "msg": "age\tvalue\n19\t4\n20\t3\n21\t7\n22\t9\n23\t20\n24\t24\n25\t44\n26\t77\n27\t94\n28\t103\n29\t97\n"
       },
       "dateCreated": "Feb 10, 2015 1:53:02 AM",
-      "dateStarted": "May 14, 2016 11:18:11 PM",
-      "dateFinished": "May 14, 2016 11:18:12 PM",
+      "dateStarted": "May 16, 2016 10:15:04 PM",
+      "dateFinished": "May 16, 2016 10:15:08 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%sql \nselect age, count(1) value \nfrom bank \nwhere age \u003c ${maxAge\u003d30} \ngroup by age \norder by age",
       "authenticationInfo": {},
-      "dateUpdated": "May 14, 2016 11:19:37 PM",
+      "dateUpdated": "May 16, 2016 10:14:59 PM",
       "config": {
         "colWidth": 4.0,
         "graph": {
@@ -174,7 +182,8 @@
         },
         "enabled": true,
         "tableHide": false,
-        "editorHide": true
+        "editorHide": true,
+        "editorMode": "ace/mode/sql"
       },
       "settings": {
         "params": {
@@ -196,15 +205,15 @@
         "msg": "age\tvalue\n19\t4\n20\t3\n21\t7\n22\t9\n23\t20\n24\t24\n25\t44\n26\t77\n27\t94\n28\t103\n29\t97\n30\t150\n31\t199\n32\t224\n33\t186\n34\t231\n"
       },
       "dateCreated": "Feb 12, 2015 2:54:04 PM",
-      "dateStarted": "May 14, 2016 11:18:15 PM",
-      "dateFinished": "May 14, 2016 11:18:16 PM",
+      "dateStarted": "May 16, 2016 10:15:08 PM",
+      "dateFinished": "May 16, 2016 10:15:09 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%sql \nselect age, count(1) value \nfrom bank \nwhere marital\u003d\"${marital\u003dsingle,single|divorced|married}\" \ngroup by age \norder by age",
       "authenticationInfo": {},
-      "dateUpdated": "May 14, 2016 11:19:37 PM",
+      "dateUpdated": "May 17, 2016 8:20:13 AM",
       "config": {
         "colWidth": 4.0,
         "graph": {
@@ -275,14 +284,14 @@
         "msg": "age\tvalue\n23\t3\n24\t11\n25\t11\n26\t18\n27\t26\n28\t23\n29\t37\n30\t56\n31\t104\n32\t105\n33\t103\n34\t142\n35\t109\n36\t117\n37\t100\n38\t99\n39\t88\n40\t105\n41\t97\n42\t91\n43\t79\n44\t68\n45\t76\n46\t82\n47\t78\n48\t91\n49\t87\n50\t74\n51\t63\n52\t66\n53\t75\n54\t56\n55\t68\n56\t50\n57\t78\n58\t67\n59\t56\n60\t36\n61\t15\n62\t5\n63\t7\n64\t6\n65\t4\n66\t7\n67\t5\n68\t1\n69\t5\n70\t5\n71\t5\n72\t4\n73\t6\n74\t2\n75\t3\n76\t1\n77\t5\n78\t2\n79\t3\n80\t6\n81\t1\n83\t2\n86\t1\n87\t1\n"
       },
       "dateCreated": "Feb 13, 2015 11:04:22 PM",
-      "dateStarted": "May 14, 2016 11:18:51 PM",
-      "dateFinished": "May 14, 2016 11:18:52 PM",
+      "dateStarted": "May 16, 2016 10:15:09 PM",
+      "dateFinished": "May 16, 2016 10:15:10 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n## Congratulations, it\u0027s done.\n##### You can create your own notebook in \u0027Notebook\u0027 menu. Good luck!",
-      "dateUpdated": "May 14, 2016 11:19:37 PM",
+      "dateUpdated": "May 16, 2016 10:15:00 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -296,7 +305,8 @@
         },
         "editorHide": true,
         "enabled": true,
-        "tableHide": false
+        "tableHide": false,
+        "editorMode": "ace/mode/markdown"
       },
       "settings": {
         "params": {},
@@ -310,14 +320,18 @@
         "msg": "\u003ch2\u003eCongratulations, it\u0027s done.\u003c/h2\u003e\n\u003ch5\u003eYou can create your own notebook in \u0027Notebook\u0027 menu. Good luck!\u003c/h5\u003e\n"
       },
       "dateCreated": "Feb 13, 2015 11:04:28 PM",
-      "dateStarted": "Apr 1, 2015 9:12:18 PM",
-      "dateFinished": "Apr 1, 2015 9:12:18 PM",
+      "dateStarted": "May 16, 2016 10:15:10 PM",
+      "dateFinished": "May 16, 2016 10:15:10 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\nAbout bank data\n\n```\nCitation Request:\n  This dataset is public available for research. The details are described in [Moro et al., 2011]. \n  Please include this citation if you plan to use this database:\n\n  [Moro et al., 2011] S. Moro, R. Laureano and P. Cortez. Using Data Mining for Bank Direct Marketing: An Application of the CRISP-DM Methodology. \n  In P. Novais et al. (Eds.), Proceedings of the European Simulation and Modelling Conference - ESM\u00272011, pp. 117-121, Guimarães, Portugal, October, 2011. EUROSIS.\n\n  Available at: [pdf] http://hdl.handle.net/1822/14838\n                [bib] http://www3.dsi.uminho.pt/pcortez/bib/2011-esm-1.txt\n```",
-      "dateUpdated": "May 14, 2016 11:19:37 PM",
+      "authenticationInfo": {
+        "user": "admin",
+        "ticket": "13824704-9cdc-412a-9f26-2ea2cfc3a633"
+      },
+      "dateUpdated": "May 17, 2016 8:21:14 AM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -329,9 +343,10 @@
           "groups": [],
           "scatter": {}
         },
-        "editorHide": true,
+        "editorHide": false,
         "enabled": true,
-        "tableHide": false
+        "tableHide": false,
+        "editorMode": "ace/mode/markdown"
       },
       "settings": {
         "params": {},
@@ -345,13 +360,13 @@
         "msg": "\u003cp\u003eAbout bank data\u003c/p\u003e\n\u003cpre\u003e\u003ccode\u003eCitation Request:\n  This dataset is public available for research. The details are described in [Moro et al., 2011]. \n  Please include this citation if you plan to use this database:\n\n  [Moro et al., 2011] S. Moro, R. Laureano and P. Cortez. Using Data Mining for Bank Direct Marketing: An Application of the CRISP-DM Methodology. \n  In P. Novais et al. (Eds.), Proceedings of the European Simulation and Modelling Conference - ESM\u00272011, pp. 117-121, Guimarães, Portugal, October, 2011. EUROSIS.\n\n  Available at: [pdf] http://hdl.handle.net/1822/14838\n                [bib] http://www3.dsi.uminho.pt/pcortez/bib/2011-esm-1.txt\n\u003c/code\u003e\u003c/pre\u003e\n"
       },
       "dateCreated": "Mar 26, 2015 9:46:58 PM",
-      "dateStarted": "Jul 3, 2015 1:44:56 PM",
-      "dateFinished": "Jul 3, 2015 1:44:56 PM",
+      "dateStarted": "May 17, 2016 8:21:14 AM",
+      "dateFinished": "May 17, 2016 8:21:14 AM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "dateUpdated": "May 14, 2016 11:19:37 PM",
+      "dateUpdated": "May 16, 2016 10:15:00 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -365,7 +380,8 @@
         },
         "enabled": true,
         "tableHide": false,
-        "editorHide": true
+        "editorHide": true,
+        "editorMode": "ace/mode/scala"
       },
       "settings": {
         "params": {},
@@ -373,12 +389,19 @@
       },
       "jobName": "paragraph_1435955447812_-158639899",
       "id": "20150703-133047_853701097",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": ""
+      },
       "dateCreated": "Jul 3, 2015 1:30:47 PM",
-      "status": "READY",
+      "dateStarted": "May 16, 2016 10:15:10 PM",
+      "dateFinished": "May 16, 2016 10:15:10 PM",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "Zeppelin Tutorial",
+  "name": "Examples",
   "id": "2A94M5J1Z",
   "angularObjects": {
     "2BKQQW278:shared_process": [],
@@ -403,5 +426,6 @@
   "config": {
     "looknfeel": "default"
   },
-  "info": {}
+  "info": {},
+  "queue": []
 }

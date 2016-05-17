@@ -29,17 +29,17 @@ limitations under the License.
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#/">
-        <img style="margin-top: -7px;" src="assets/images/zepLogoW.png" width="50" alt="I'm zeppelin"> Zeppelin
+      <a class="navbar-brand" href="#/home">
+        <img style="margin-top: -7px;" src="assets/images/zepLogoW.png" width="50" alt="I'm zeppelin"> CITIES Data
       </a>
     </div>
 
     <div class="collapse navbar-collapse" ng-controller="NavCtrl as navbar">
       <ul class="nav navbar-nav">
         <li class="dropdown" dropdown>
-          <a href="#" class="dropdown-toggle" dropdown-toggle>Notebook <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" dropdown-toggle>Jobs <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="" data-toggle="modal" data-target="#noteNameModal"><i class="fa fa-plus"></i> Create new note</a></li>
+            <li><a href="" data-toggle="modal" data-target="#noteNameModal"><i class="fa fa-plus"></i> Create new job</a></li>
             <li class="divider"></li>
             <div id="notebook-list" class="scrollbar-container">
               <li class="filter-names" ng-include="'components/filterNoteNames/filter-note-names.html'"></li>
@@ -95,7 +95,7 @@ limitations under the License.
             <button class="btn btn-default" data-toggle="modal" data-target="#loginModal" ng-click="showLoginWindow()" style="margin-left: 10px">Login</button>
         </li>
         <li ng-show="ticket.principal != 'anonymous'">
-        	<button type="button" class="btn btn-default btn-xs" ng-click="logout()" tooltip-placement="bottom" tooltip="logout">{{ticket.principal}}</button>
+        	<button type="button" class="btn btn-default btn-xs" ng-click="logout()" tooltip-placement="bottom" tooltip="logout">Logout</button>
         </li>
       </ul>
     </div>

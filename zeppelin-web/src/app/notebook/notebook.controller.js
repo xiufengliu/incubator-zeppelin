@@ -123,11 +123,11 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
     BootstrapDialog.confirm({
       closable: true,
       title: '',
-      message: 'Do you want to delete this notebook?',
+      message: 'Do you want to delete this job?',
       callback: function(result) {
         if (result) {
           websocketMsgSrv.deleteNotebook(noteId);
-          $location.path('/#');
+          $location.path('/home');
         }
       }
     });
@@ -144,11 +144,11 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
     BootstrapDialog.confirm({
       closable: true,
       title: '',
-      message: 'Do you want to clone this notebook?',
+      message: 'Do you want to clone this job?',
       callback: function(result) {
         if (result) {
           websocketMsgSrv.cloneNotebook(noteId);
-          $location.path('/#');
+          $location.path('/home');
         }
       }
     });
@@ -177,7 +177,8 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
       callback: function(result) {
         if (result) {
           _.forEach($scope.note.paragraphs, function (n, key) {
-            angular.element('#' + n.id + '_paragraphColumn_main').scope().runParagraph(n.text);
+            // angular.element('#' + n.id + '_paragraphColumn_main').scope().runParagraph(n.text);
+            angular.element('#' + n.id + '_paragraphColumn_main').scope().runNoteParagraphs(n.text); // Added by Xiufeng Liu
           });
         }
       }
@@ -688,7 +689,7 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
       console.log('Error %o %o', status, data.message);
       BootstrapDialog.show({
           closable: true,
-          title: 'Insufficient privileges', 
+          title: 'Insufficient privileges',
           message: data.message,
           buttons: [{
               label: 'Login',

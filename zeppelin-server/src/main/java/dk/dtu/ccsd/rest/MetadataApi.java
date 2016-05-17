@@ -2,11 +2,7 @@ package dk.dtu.ccsd.rest;
 
 import com.google.gson.Gson;
 
-import dk.dtu.ccsd.dto.User;
 import dk.dtu.ccsd.jaxb.DataCiteJsonXmlConverter;
-import dk.dtu.ccsd.jaxb.datacite.Resource;
-import dk.dtu.ccsd.resp.LoginResponse;
-import dk.dtu.ccsd.service.UserService;
 
 import org.apache.zeppelin.server.JsonResponse;
 import org.slf4j.Logger;

@@ -2,9 +2,6 @@ package dk.dtu.ccsd.resp;
 
 import dk.dtu.ccsd.dto.User;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by xiuli on 11/12/15.
  */

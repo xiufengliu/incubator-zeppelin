@@ -52,6 +52,9 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+import dk.dtu.ccsd.rest.MetadataApi;
+import dk.dtu.ccsd.rest.UserApi;
+
 /**
  * Main class of Zeppelin.
  */
@@ -301,6 +304,9 @@ public class ZeppelinServer extends Application {
 
     ConfigurationsRestApi settingsApi = new ConfigurationsRestApi(notebook);
     singletons.add(settingsApi);
+
+    //singletons.add(new UserApi()); // added by xiufeng
+    singletons.add(new MetadataApi()); // added by xiufeng
 
     return singletons;
   }

@@ -47,7 +47,11 @@
             $httpProvider.defaults.withCredentials = true;
 
             $routeProvider
-                .when('/', {
+                .when('/', {// Added by xiufeng
+                    templateUrl: 'app/login/login.html',
+                    controller: 'LoginCtrl'
+                })
+                .when('/home', {
                     templateUrl: 'app/home/home.html'
                 })
                 .when('/notebook/:noteId', {
@@ -73,6 +77,25 @@
                 .when('/search/:searchTerm', {
                     templateUrl: 'app/search/result-list.html',
                     controller: 'SearchResultCtrl'
+                })
+                 .when('/register', { //Added by Xiufeng
+                            templateUrl: 'app/registration/register.html',
+                            controller: 'RegisterCtrl'
+                        })
+                .when('/registercompleted', {//Added by Xiufeng
+                    templateUrl: 'app/registration/completed.html'
+                })
+                .when('/metadatagen', {//Added by Xiufeng
+                    templateUrl: 'app/metadata/metadatagen.html',
+                    data: {
+                        requiresLogin: true
+                    }
+                })
+                .when('/account', {//Added by Xiufeng
+                    templateUrl: 'app/account/account.html',
+                    data: {
+                        requiresLogin: true
+                    }
                 })
                 .otherwise({
                     redirectTo: '/'

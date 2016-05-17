@@ -628,7 +628,7 @@ public class Resource {
       /**
        * Gets the value of the contributorType property.
        *
-       * @return possible object is {@link dk.dtu.ccsd.jaxb.datacite.DateType.ContributorType }
+       * @return possible object is {@link DateType.ContributorType }
        */
       public DateType.ContributorType getContributorType() {
         return contributorType;
@@ -637,7 +637,7 @@ public class Resource {
       /**
        * Sets the value of the contributorType property.
        *
-       * @param value allowed object is {@link dk.dtu.ccsd.jaxb.datacite.DateType.ContributorType }
+       * @param value allowed object is {@link DateType.ContributorType }
        */
       public void setContributorType(DateType.ContributorType value) {
         this.contributorType = value;
