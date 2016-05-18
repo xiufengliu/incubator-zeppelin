@@ -1,0 +1,35 @@
+{
+  "authInfo": {
+    "2A94M5J1Z": {
+      "owners": [
+        "xiuli"
+      ],
+      "readers": [
+        "ALL"
+      ],
+      "writers": [
+        "xiuli"
+      ]
+    },
+    "2BMFZ8YZ1": {
+      "owners": [
+        "user1"
+      ],
+      "readers": [
+        "all"
+      ],
+      "writers": [
+        "user2"
+      ]
+    },
+    "2BJ8AYS36": {
+      "owners": [
+        "user1"
+      ],
+      "readers": [],
+      "writers": [
+        "user2"
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="dk.dtu.ccsd.dto.User" table="cities_user">
+        <id name="Id" type="int" column="Id">
+            <generator class="increment" />
+        </id>
+        <property name="username" type="string">
+            <column name="username" length="20" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="40" not-null="true" />
+        </property>
+        <property name="firstName" type="string">
+            <column name="firstName" length="20" not-null="true" />
+        </property>
+
+        <property name="lastName" type="string">
+            <column name="lastName" length="20" not-null="true" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="20" not-null="true" />
+        </property>
+
+        <property name="admin" type="boolean">
+            <column name="admin" not-null="true" />
+        </property>
+        <property name="allowedKeywords" type="string">
+            <column name="allowedkeywords" not-null="false" />
+        </property>
+        <property name="dob" type="date">
+            <column name="dob" length="7" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
