@@ -30,6 +30,15 @@
       "writers": [
         "user2"
       ]
+    },
+    "2BJQDSAC5": {
+      "owners": [
+        "ADMIN",
+        "xiuli",
+        "ALL"
+      ],
+      "readers": [],
+      "writers": []
     }
   }
 }

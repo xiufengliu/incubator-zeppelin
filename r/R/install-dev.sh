@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,15 +16,26 @@
 # limitations under the License.
 #
 
-log4j.rootLogger = INFO, dailyfile
+# This scripts packages R files to create a package that can be loaded into R,
+# and also installs necessary packages.
 
-log4j.appender.stdout = org.apache.log4j.ConsoleAppender
-log4j.appender.stdout.layout = org.apache.log4j.PatternLayout
-log4j.appender.stdout.layout.ConversionPattern=%5p [%d] ({%t} %F[%M]:%L) - %m%n
 
-log4j.appender.dailyfile.DatePattern=.yyyy-MM-dd
-log4j.appender.dailyfile.Threshold = INFO
-log4j.appender.dailyfile = org.apache.log4j.DailyRollingFileAppender
-log4j.appender.dailyfile.File = ${zeppelin.log.file}
-log4j.appender.dailyfile.layout = org.apache.log4j.PatternLayout
-log4j.appender.dailyfile.layout.ConversionPattern=%5p [%d] ({%t} %F[%M]:%L) - %m%n
+set -o pipefail
+set -e
+set -x
+
+FWDIR="$(cd `dirname $0`; pwd)"
+LIB_DIR="$FWDIR/../../R/lib"
+
+mkdir -p $LIB_DIR
+
+pushd $FWDIR > /dev/null
+
+# Generate Rd files if devtools is installed
+#Rscript -e ' if("devtools" %in% rownames(installed.packages())) { library(devtools); devtools::document(pkg="./pkg", roclets=c("rd")) }'
+
+# Install SparkR to $LIB_DIR
+R CMD INSTALL --library=$LIB_DIR $FWDIR/rzeppelin/
+
+popd > /dev/null
+set +x
