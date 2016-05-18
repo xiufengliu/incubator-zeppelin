@@ -1,0 +1,74 @@
+<resource xmlns="http://datacite.org/schema/kernel-3" xmlns: xsi="http://www.w3.org/2001/XMLSchema-instance" xsi: schemaLocation="http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd">
+  <identifier identifierType="DOI">doi</identifier>
+  <titles>
+    <title titleType="Subtitle">test</title>
+    <title titleType="TranslatedTitle">subtitle</title>
+  </titles>
+  <creators>
+    <creator>
+      <creatorName>Xiufeng Liu</creatorName>
+      <nameIdentifier nameIdentifierScheme="NameScheme" schemeURI="http://liu.com">Xiu</nameIdentifier>
+      <affiliation>DTU</affiliation>
+      <affiliation>AAU</affiliation>
+    </creator>
+    <reator>
+      <creatorName>Afancy</creatorName>
+      <nameIdentifier nameIdentifierScheme="afancy" schemeURI="aau.dk">afancyliu</nameIdentifier>
+      <affiliation>Xiufeng</affiliation>
+      <affiliation>Liu</affiliation>
+    </creator>
+  </creators>
+
+  <publisher>Publisher</publisher>
+  <publicationYear>2015</publicationYear>
+</resource>
+
+{
+     "@schemaLocation": "http://datacite.org/schema/kernel-3 http://schema.datacite.org/meta/kernel-3/metadata.xsd",
+   "identifier": {
+      "@identifierType": "DOI",
+      "#text": "doi"
+   },
+   "titles": {
+      "title": [
+         {
+            "@titleType": "Subtitle",
+            "#text": "test"
+         },
+         {
+            "@titleType": "TranslatedTitle",
+            "#text": "subtitle"
+         }
+      ]
+   },
+   "creators": {
+      "creator": [
+         {
+            "creatorName": "Xiufeng Liu",
+            "nameIdentifier": {
+               "@nameIdentifierScheme": "NameScheme",
+               "@schemeURI": "http://liu.com",
+               "#text": "Xiu"
+            },
+            "affiliation": [
+               "DTU",
+               "AAU"
+            ]
+         },
+         {
+            "creatorName": "Afancy",
+            "nameIdentifier": {
+               "@nameIdentifierScheme": "afancy",
+               "@schemeURI": "aau.dk",
+               "#text": "afancyliu"
+            },
+            "affiliation": [
+               "Xiufeng",
+               "Liu"
+            ]
+         }
+      ]
+   },
+   "publisher": "Publisher",
+   "publicationYear": "2015"
+}

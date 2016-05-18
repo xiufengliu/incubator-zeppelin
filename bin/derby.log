@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sat May 14 23:17:01 CEST 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0154-b121-2c0d-00002ee4ec58 
+on database directory /home/xiuli/IdeaProjects/zeppelin_current/bin/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@1da42709 
+Loaded from file:/home/xiuli/IdeaProjects/zeppelin_current/interpreter/spark/dep/zeppelin-spark-dependencies-0.6.0-incubating-SNAPSHOT.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_80-b15
+user.dir=/home/xiuli/IdeaProjects/zeppelin_current/bin
+os.name=Linux
+os.arch=amd64
+os.version=3.16.0-50-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

@@ -68,7 +68,8 @@ object ZeppelinRDisplay {
   }
 
   private def textDisplay(body: Element): RDisplay = {
-    RDisplay(body.getElementsByTag("p").get(0).html(), TEXT, SUCCESS)
+    //RDisplay(body.getElementsByTag("p").get(0).html(), TEXT, SUCCESS)
+    RDisplay(body.getElementsByTag("p").first().html(), TEXT, SUCCESS)
   }
 
   private def tableDisplay(body: Element): RDisplay = {

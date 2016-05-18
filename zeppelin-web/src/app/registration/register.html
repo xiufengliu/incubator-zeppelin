@@ -1,0 +1,195 @@
+<script type="text/ng-template" id="form-messages">
+    <div ng-message="required">This field cannot be blank</div>
+    <div ng-message="minlength">The value for this field is too short</div>
+    <div ng-message="maxlength">The value for this field is too long</div>
+    <div ng-message="email">You have entered an incorrect email value</div>
+    <div ng-message="pattern">You did not enter the value in the correct format</div>
+    <div ng-message="password-characters">
+        Your password must consist of alphabetical or numeric characters.
+        It must also contain at least one special character, a number as well as an uppercase letter.
+    </div>
+</script>
+<style>
+    .main-form {
+        top:0;
+        background:white;
+        width:500px;
+        z-index:100;
+        padding:20px;
+        min-height:100%;
+    }
+
+
+    .control-group {
+        margin-bottom:20px;
+    }
+    :required {
+        background: #fff url('../assets/images/required.png') no-repeat 100% 0;
+    }
+    .ng-dirty.ng-valid{
+        border: 1px solid #55B05A;
+        background: url('../assets/images/valid.png') no-repeat 100% 0;
+    }
+    .error-messages.ng-active {
+        background:maroon;
+        color:white;
+        padding:5px;
+        border-radius:5px;
+        margin-top:15px;
+        position:relative;
+    }
+    .error-messages.ng-active:after {
+        position:absolute;
+        top:-10px;
+        content:"";
+        left:20px;
+        border-style:solid;
+        border-color:transparent transparent maroon;
+        border-width:5px;
+    }
+    [ng\:cloak], [ng-cloak], .ng-cloak {
+        display: none !important;
+    }
+</style>
+<div class="navbar navbar-inverse navbar-fixed-top displayNavBar" style="display: none;" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#/"><img style="margin-top: -7px;" src="assets/images/zepLogoW.png" width="50"> CITIES Data </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right" style="margin-top:10px; margin-right:5px;">
+                <li>
+                    <a href="#/">
+                        <i class="fa fa-sign-out icon-resize-small"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<form name="my_form"
+      class="main-form container"
+      ng-cloak class="ng-cloak"
+      data-ng-submit="submit()"
+      novalidate>
+
+    <h1>Sign Up</h1>
+
+    <div class="control-group">
+        <div class="row">
+            <div class="col-md-6">
+                <input class="form-control"
+                       type="text"
+                       name="firstName"
+                       id="input_firstName"
+                       ng-model="data.firstName"
+                       ng-model-options="{ updateOn: 'blur' }"
+                       ng-keyup="cancel($event)"
+                       required
+                       placeholder="First name" />
+                <div class="error-messages" ng-if="interacted(my_form.firstName)" ng-messages="my_form.firstName.$error" ng-messages-include="form-messages">
+                    <!-- remove the next line to use the default 'Cannot be blank' message defined  in script above -->
+                    <div ng-message="required">First name is required</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <input class="form-control"
+                       type="text"
+                       name="lastName"
+                       id="input_lastName"
+                       ng-model="data.lastName"
+                       ng-model-options="{ updateOn: 'blur' }"
+                       ng-keyup="cancel($event)"
+                       required
+                       placeholder="Last name"/>
+                <div class="error-messages" ng-if="interacted(my_form.lastName)" ng-messages="my_form.lastName.$error" ng-messages-include="form-messages">
+                    <div ng-message="required">Last name is required</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <input class="form-control"
+               type="text"
+               name="username"
+               id="input_username"
+               ng-model="data.username"
+               ng-minlength="4"
+               ng-minlength="12"
+               username-available-validator
+               ng-model-options="{ updateOn: 'blur' }"
+               ng-keyup="cancel($event)"
+               required
+               placeholder="Username" />
+        <div class="error-messages" ng-if="interacted(my_form.username)" ng-messages="my_form.username.$error" ng-messages-include="form-messages">
+            <div ng-message="required">Username is required</div>
+            <div ng-message="username-record-loading">Checking database...</div>
+            <div ng-message="username-record-taken">{{ $parent.data.username }} already exists</div>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <input class="form-control"
+               type="email"
+               name="email"
+               id="input_email"
+               ng-model="data.email"
+               email-available-validator
+               ng-model-options="{ updateOn: 'blur' }"
+               ng-keyup="cancel($event)"
+               required
+               placeholder="Email" />
+        <div class="error-messages" ng-if="interacted(my_form.email)" ng-messages="my_form.email.$error" ng-messages-include="form-messages">
+            <div ng-message="required">Email is required</div>
+            <div ng-message="email-record-loading">Checking database...</div>
+            <div ng-message="email-record-taken">{{ $parent.data.email }} already exists</div>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <input class="form-control"
+               type="password"
+               name="password"
+               id="input_password"
+               ng-model="data.password"
+               ng-minlength="4"
+               ng-maxlength="12"
+               ng-model-options="{ updateOn: 'blur' }"
+               ng-keyup="cancel($event)"
+               password-characters-validator
+               required
+               placeholder="Password" />
+        <div class="error-messages"
+             ng-if="interacted(my_form.password)"
+             ng-messages="my_form.password.$error"
+             ng-messages-include="form-messages"></div>
+    </div>
+
+    <div class="control-group">
+        <input class="form-control"
+               type="password"
+               name="password_confirm"
+               id="input_password_confirm"
+               ng-model="data.password_confirm"
+               ng-minlength="4"
+               ng-maxlength="12"
+               ng-model-options="{ updateOn: 'blur' }"
+               ng-keyup="cancel($event)"
+               password-characters-validator
+               match-validator="data.password"
+               required
+               placeholder="Confirm password"/>
+        <div class="error-messages" ng-if="interacted(my_form.password_confirm)" ng-messages="my_form.password_confirm.$error" ng-messages-include="form-messages">
+            <div ng-message="match">This password does not match the password entered before</div>
+        </div>
+    </div>
+
+    <input class="form-control btn btn-primary" value="Submit" type="submit"/>
+    </form>
