@@ -39,8 +39,8 @@ limitations under the License.
         <li class="dropdown" dropdown>
           <a href="#" class="dropdown-toggle" dropdown-toggle>Jobs <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="" data-toggle="modal" data-target="#noteNameModal"><i class="fa fa-plus"></i> Create new job</a></li>
-            <li class="divider"></li>
+            <li><a href="" data-toggle="modal" data-target="#noteNameModal" data-ng-show="ticket.roles.indexOf('ADMIN')>-1"><i class="fa fa-plus"></i> Create new job</a></li>
+            <li class="divider" data-ng-show="ticket.roles.indexOf('ADMIN')>-1"></li>
             <div id="notebook-list" class="scrollbar-container">
               <li class="filter-names" ng-include="'components/filterNoteNames/filter-note-names.html'"></li>
               <li ng-repeat="note in navbar.notes.list | filter:query | orderBy:navbar.arrayOrderingSrv.notebookListOrdering track by $index"
@@ -51,10 +51,10 @@ limitations under the License.
             </div>
           </ul>
         </li>
-        <li>
+        <li data-ng-show="ticket.roles.indexOf('ADMIN')>-1">
           <a href="#/interpreter">Interpreter</a>
         </li>
-        <li>
+        <li data-ng-show="ticket.roles.indexOf('ADMIN')>-1">
           <a href="#/configuration">Configuration</a>
         </li>
       </ul>
@@ -72,7 +72,7 @@ limitations under the License.
                 ng-model="searchTerm"
                 ng-disabled="!navbar.connected"
                 class="form-control"
-                placeholder="Search in your notebooks"
+                placeholder="Search in your workspace"
               />
               <span class="input-group-btn">
                 <button

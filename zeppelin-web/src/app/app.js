@@ -52,31 +52,38 @@
                     controller: 'LoginCtrl'
                 })
                 .when('/home', {
-                    templateUrl: 'app/home/home.html'
+                    templateUrl: 'app/home/home.html',
+                    data: {requiresLogin: true}
                 })
                 .when('/notebook/:noteId', {
                     templateUrl: 'app/notebook/notebook.html',
-                    controller: 'NotebookCtrl'
+                    controller: 'NotebookCtrl',
+                    data: {requiresLogin: true}
                 })
                 .when('/notebook/:noteId/paragraph?=:paragraphId', {
                     templateUrl: 'app/notebook/notebook.html',
-                    controller: 'NotebookCtrl'
+                    controller: 'NotebookCtrl',
+                    data: {requiresLogin: true}
                 })
                 .when('/notebook/:noteId/paragraph/:paragraphId?', {
                     templateUrl: 'app/notebook/notebook.html',
-                    controller: 'NotebookCtrl'
+                    controller: 'NotebookCtrl',
+                    data: {requiresLogin: true}
                 })
                 .when('/interpreter', {
                     templateUrl: 'app/interpreter/interpreter.html',
-                    controller: 'InterpreterCtrl'
+                    controller: 'InterpreterCtrl',
+                    data: {requiresLogin: true}
                 })
                 .when('/configuration', {
                   templateUrl: 'app/configuration/configuration.html',
-                  controller: 'ConfigurationCtrl'
+                  controller: 'ConfigurationCtrl',
+                  data: {requiresLogin: true}
                 })
                 .when('/search/:searchTerm', {
                     templateUrl: 'app/search/result-list.html',
-                    controller: 'SearchResultCtrl'
+                    controller: 'SearchResultCtrl',
+                    data: {requiresLogin: true}
                 })
                  .when('/register', { //Added by Xiufeng
                             templateUrl: 'app/registration/register.html',
@@ -87,15 +94,11 @@
                 })
                 .when('/metadatagen', {//Added by Xiufeng
                     templateUrl: 'app/metadata/metadatagen.html',
-                    data: {
-                        requiresLogin: true
-                    }
+                    data: {requiresLogin: true}
                 })
                 .when('/account', {//Added by Xiufeng
                     templateUrl: 'app/account/account.html',
-                    data: {
-                        requiresLogin: true
-                    }
+                    data: {requiresLogin: true}
                 })
                 .otherwise({
                     redirectTo: '/'
@@ -112,16 +115,12 @@
     function auth() {
         var $http = angular.injector(['ng']).get('$http');
         var baseUrlSrv = angular.injector(['zeppelinWebApp']).get('baseUrlSrv');
-        // withCredentials when running locally via grunt
         $http.defaults.withCredentials = true;
-
         return $http.get(baseUrlSrv.getRestApiBase()+'/security/ticket').then(function(response) {
             zeppelinWebApp.run(function($rootScope) {
                 $rootScope.ticket = angular.fromJson(response.data).body;
             });
-        }, function(errorResponse) {
-            // Handle error case
-        });
+        }, function(errorResponse) { });
     }
 
     function bootstrapApplication() {
@@ -129,9 +128,11 @@
     }
 
 
-    angular.element(document).ready(function() {
+    angular.element(document).ready(
+      function() {
         auth().then(bootstrapApplication);
-    });
+      }
+    );
 
 }());
 

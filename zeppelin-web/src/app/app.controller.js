@@ -13,7 +13,7 @@
  */
 'use strict';
 
-angular.module('zeppelinWebApp').controller('MainCtrl', function($scope, $rootScope, $window) {
+angular.module('zeppelinWebApp').controller('MainCtrl', function($scope, $rootScope,  $location, $window) {
   $scope.looknfeel = 'default';
 
   var init = function() {
@@ -38,8 +38,15 @@ angular.module('zeppelinWebApp').controller('MainCtrl', function($scope, $rootSc
 
   // Set The lookAndFeel to default on every page
   $rootScope.$on('$routeChangeStart', function(event, next, current) {
+    if (next.data && next.data.requiresLogin) {
+        if (!$rootScope.ticket) {
+          event.preventDefault();
+          $location.path( '/' );
+        }
+    }
     $rootScope.$broadcast('setLookAndFeel', 'default');
   });
+
 
   BootstrapDialog.defaultOptions.onshown = function() {
     angular.element('#' + this.id).find('.btn:last').focus();

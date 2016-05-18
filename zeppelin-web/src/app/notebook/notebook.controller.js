@@ -159,7 +159,7 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
     BootstrapDialog.confirm({
       closable: true,
       title: '',
-      message: 'Commit notebook to current repository?',
+      message: 'Commit job to current repository?',
       callback: function(result) {
         if (result) {
           websocketMsgSrv.checkpointNotebook($routeParams.noteId, commitMessage);
@@ -173,7 +173,7 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
     BootstrapDialog.confirm({
       closable: true,
       title: '',
-      message: 'Run all paragraphs?',
+      message: 'Run all steps?',
       callback: function(result) {
         if (result) {
           _.forEach($scope.note.paragraphs, function (n, key) {
@@ -458,7 +458,7 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
   var updateNote = function(note) {
     /** update Note name */
     if (note.name !== $scope.note.name) {
-      console.log('change note name: %o to %o', $scope.note.name, note.name);
+      console.log('change job name: %o to %o', $scope.note.name, note.name);
       $scope.note.name = note.name;
     }
 

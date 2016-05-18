@@ -16,14 +16,16 @@
  */
 package org.apache.zeppelin.utils;
 
+
 import org.apache.shiro.subject.Subject;
 import org.apache.zeppelin.conf.ZeppelinConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -31,6 +33,7 @@ import java.util.HashSet;
  */
 public class SecurityUtils {
 
+  private static final Logger log = LoggerFactory.getLogger(SecurityUtils.class);
   public static Boolean isValidOrigin(String sourceHost, ZeppelinConfiguration conf)
       throws UnknownHostException, URISyntaxException {
     if (sourceHost == null || sourceHost.isEmpty()){
@@ -71,15 +74,11 @@ public class SecurityUtils {
    */
   public static HashSet<String> getRoles() {
     Subject subject = org.apache.shiro.SecurityUtils.getSubject();
-
+    ZeppelinRealm realm = ZeppelinRealm.create();
     HashSet<String> roles = new HashSet<>();
-
     if (subject.isAuthenticated()) {
-      for (String role : Arrays.asList("all", "role1", "role2", "role3")) {
-        if (subject.hasRole(role)) {
-          roles.add(role);
-        }
-      }
+      roles.addAll(realm.getRoles(subject.getPrincipal().toString()));
+      return roles;
     }
     return roles;
   }

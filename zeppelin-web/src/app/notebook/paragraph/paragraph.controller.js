@@ -553,31 +553,25 @@ angular.module('zeppelinWebApp')
 
   $scope.closeEditor = function() {
     console.log('close the note');
-
     var newParams = angular.copy($scope.paragraph.settings.params);
     var newConfig = angular.copy($scope.paragraph.config);
     newConfig.editorHide = true;
-
     commitParagraph($scope.paragraph.title, $scope.paragraph.text, newConfig, newParams);
   };
 
   $scope.openEditor = function() {
     console.log('open the note');
-
     var newParams = angular.copy($scope.paragraph.settings.params);
     var newConfig = angular.copy($scope.paragraph.config);
     newConfig.editorHide = false;
-
     commitParagraph($scope.paragraph.title, $scope.paragraph.text, newConfig, newParams);
   };
 
   $scope.closeTable = function() {
     console.log('close the output');
-
     var newParams = angular.copy($scope.paragraph.settings.params);
     var newConfig = angular.copy($scope.paragraph.config);
     newConfig.tableHide = true;
-
     commitParagraph($scope.paragraph.title, $scope.paragraph.text, newConfig, newParams);
   };
 

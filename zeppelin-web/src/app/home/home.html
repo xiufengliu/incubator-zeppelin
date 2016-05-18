@@ -44,7 +44,7 @@ limitations under the License.
 
       <div class="row">
         <div class="col-md-4">
-          <h4>Notebook
+          <h4>Workspace
             <i ng-class="isReloadingNotes ? 'fa fa-refresh fa-spin' : 'fa fa-refresh'"
               ng-style="!isReloadingNotes && {'cursor': 'pointer'}" style="font-size: 13px;"
               ng-click="reloadNotebookList();"
@@ -53,10 +53,14 @@ limitations under the License.
           </h4>
 
           <div>
-            <h5><a href="" data-toggle="modal" data-target="#noteImportModal" style="text-decoration: none;">
-              <i style="font-size: 15px;" class="fa fa-upload"></i> Import note</a></h5>
-            <h5><a href="" data-toggle="modal" data-target="#noteNameModal" style="text-decoration: none;">
-              <i style="font-size: 15px;" class="icon-notebook"></i> Create new note</a></h5>
+            <h5><a href="" data-toggle="modal" data-target="#noteImportModal" style="text-decoration: none;" data-ng-show="ticket.roles.indexOf('ADMIN')>-1">
+              <i style="font-size: 15px;" class="fa fa-upload"></i> Import job</a></h5>
+            <h5>
+              <a href="" data-toggle="modal" data-target="#noteNameModal" style="text-decoration: none;" data-ng-show="ticket.roles.indexOf('ADMIN')>-1">
+              <i style="font-size: 15px;" class="icon-notebook"></i>Create a new job</a>
+              <a href="" style="text-decoration: none;" data-ng-show="ticket.roles.indexOf('ADMIN')==-1">
+                <i style="font-size: 15px;" class="icon-notebook"></i>List of Jobs</a>
+            </h5>
             <ul id="notebook-names">
               <li class="filter-names" ng-include="'components/filterNoteNames/filter-note-names.html'"></li>
               <li ng-repeat="note in home.notes.list | filter:query | orderBy:home.arrayOrderingSrv.notebookListOrdering track by $index">
