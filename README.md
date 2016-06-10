@@ -1,14 +1,12 @@
 #Zeppelin
 
 **Documentation:** [User Guide](http://zeppelin.incubator.apache.org/docs/latest/index.html)<br/>
-**Mailing Lists:** [User and Dev mailing list](http://zeppelin.incubator.apache.org/community.html)<br/>
-**Continuous Integration:** [![Build Status](https://secure.travis-ci.org/apache/incubator-zeppelin.png?branch=master)](https://travis-ci.org/apache/incubator-zeppelin) <br/>
 **Contributing:** [Contribution Guide](https://github.com/apache/incubator-zeppelin/blob/master/CONTRIBUTING.md)<br/>
 **Issue Tracker:** [Jira](https://issues.apache.org/jira/browse/ZEPPELIN)<br/>
 **License:** [Apache 2.0](https://github.com/apache/incubator-zeppelin/blob/master/LICENSE)
 
 
-**Zeppelin**, a web-based notebook that enables interactive data analytics. You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more.
+**Zeppelin -- CITIES Data**, a web-based notebook that enables interactive data analytics. You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more.
 In this pull request, we have changed several things from the original Zeppelin:
    * Add the login user interface
    * Add the dependency of the executions of paragraphs, which means that the paragraphs in a notebook can be executed sequentially. This is one of the most important features, I think, since this platform can be used as an ETL tool.
