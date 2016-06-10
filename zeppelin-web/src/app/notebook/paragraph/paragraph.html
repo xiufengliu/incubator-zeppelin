@@ -12,8 +12,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<div id="{{paragraph.id}}_container"
-     ng-class="{'paragraph': !asIframe, 'paragraphAsIframe': asIframe}">
+<div id="{{paragraph.id}}_container"  ng-class="{'paragraph': !asIframe, 'paragraphAsIframe': asIframe}">
 
   <div ng-show="paragraph.config.title"
        id="{{paragraph.id}}_title"
@@ -50,7 +49,7 @@ limitations under the License.
       </div>
     </div>
 
-    <div ng-include src="'app/notebook/paragraph/paragraph-progressBar.html'"></div>
+    <div  ng-include src="'app/notebook/paragraph/paragraph-progressBar.html'"></div>
     <div ng-include src="'app/notebook/paragraph/paragraph-parameterizedQueryForm.html'"></div>
 
     <!-- Rendering -->

@@ -39,6 +39,15 @@
       ],
       "readers": [],
       "writers": []
+    },
+    "2BJDT2BGX": {
+      "owners": [
+        "ADMIN",
+        "xiuli",
+        "ALL"
+      ],
+      "readers": [],
+      "writers": []
     }
   }
 }

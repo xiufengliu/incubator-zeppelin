@@ -9,6 +9,10 @@
 
 
 **Zeppelin**, a web-based notebook that enables interactive data analytics. You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more.
+In this pull request, we have changed several things from the original Zeppelin:
+    * Add the login user interface
+    * Add the dependency of the executions of paragraphs, which means that the paragraphs in a notebook can be executed sequentially. This is one of the most important features, I think, since this platform can be used as an ETL tool.
+    * Change to CITIES Data, the platform of our CITIES project 
 
 Core feature:
    * Web based notebook style editor.

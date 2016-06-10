@@ -36,8 +36,8 @@ angular.module('zeppelinWebApp').controller('MainCtrl', function($scope, $rootSc
     }
   });
 
-  // Set The lookAndFeel to default on every page
-  $rootScope.$on('$routeChangeStart', function(event, next, current) {
+  // Added by Xiufeng Liu
+ /* $rootScope.$on('$routeChangeStart', function(event, next, current) {
     if (next.data && next.data.requiresLogin) {
         if (!$rootScope.ticket) {
           event.preventDefault();
@@ -45,7 +45,11 @@ angular.module('zeppelinWebApp').controller('MainCtrl', function($scope, $rootSc
         }
     }
     $rootScope.$broadcast('setLookAndFeel', 'default');
-  });
+  });*/
+  $rootScope.$on('$routeChangeStart', function(event, next, current) {
+      $rootScope.$broadcast('setLookAndFeel', 'default');
+    });
+
 
 
   BootstrapDialog.defaultOptions.onshown = function() {

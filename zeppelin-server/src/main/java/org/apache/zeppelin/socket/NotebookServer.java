@@ -100,23 +100,29 @@ public class NotebookServer extends WebSocketServlet implements
     Notebook notebook = notebook();
     try {
       Message messagereceived = deserializeMessage(msg);
-      LOG.debug("RECEIVE << " + messagereceived.op);
-      LOG.debug("RECEIVE PRINCIPAL << " + messagereceived.principal);
-      LOG.debug("RECEIVE TICKET << " + messagereceived.ticket);
-      LOG.debug("RECEIVE ROLES << " + messagereceived.roles);
-
-      if (LOG.isTraceEnabled()) {
+      /*LOG.info("RECEIVE OP = " + messagereceived.op);
+      LOG.info("RECEIVE PRINCIPAL = " + messagereceived.principal);
+      LOG.info("RECEIVE TICKET = " + messagereceived.ticket);
+      LOG.info("RECEIVE ROLES = " + messagereceived.roles);
+      */
+      //if (LOG.isTraceEnabled()) {
         LOG.trace("RECEIVE MSG = " + messagereceived);
+      //}
+
+
+      if (!(messagereceived.data!=null && messagereceived.get("asIframe")!=null)){
+        String ticket = TicketContainer.instance.getTicket(messagereceived.principal);
+        if (ticket != null && !ticket.equals(messagereceived.ticket))
+          throw new Exception("Invalid ticket " + messagereceived.ticket + " != " + ticket);
       }
 
-      String ticket = TicketContainer.instance.getTicket(messagereceived.principal);
-      if (ticket != null && !ticket.equals(messagereceived.ticket))
-        throw new Exception("Invalid ticket " + messagereceived.ticket + " != " + ticket);
 
       ZeppelinConfiguration conf = ZeppelinConfiguration.create();
+
       boolean allowAnonymous = conf.
           getBoolean(ZeppelinConfiguration.ConfVars.ZEPPELIN_ANONYMOUS_ALLOWED);
-      if (!allowAnonymous && messagereceived.principal.equals("anonymous")) {
+      if (!allowAnonymous &&
+          messagereceived.principal.equals("anonymous")) {
         throw new Exception("Anonymous access not allowed ");
       }
 
@@ -439,9 +445,11 @@ public class NotebookServer extends WebSocketServlet implements
     Note note = notebook.getNote(noteId);
     NotebookAuthorization notebookAuthorization = notebook.getNotebookAuthorization();
     if (note != null) {
-      if (!notebookAuthorization.isReader(noteId, userAndRoles)) {
-        permissionError(conn, "read", userAndRoles, notebookAuthorization.getReaders(noteId));
-        return;
+      if (!(fromMessage.data!=null && fromMessage.get("asIframe")!=null)) {
+        if (!notebookAuthorization.isReader(noteId, userAndRoles)) {
+          permissionError(conn, "read", userAndRoles, notebookAuthorization.getReaders(noteId));
+          return;
+        }
       }
       addConnectionToNote(note.id(), conn);
       conn.send(serializeMessage(new Message(OP.NOTE).put("note", note)));

@@ -41,8 +41,8 @@ angular.module('zeppelinWebApp').service('websocketMsgSrv', function($rootScope,
       websocketEvents.sendNewEvent({op: 'RELOAD_NOTES_FROM_REPO'});
     },
 
-    getNotebook: function(noteId) {
-      websocketEvents.sendNewEvent({op: 'GET_NOTE', data: {id: noteId}});
+    getNotebook: function(noteId, asIframe) {
+      websocketEvents.sendNewEvent({op: 'GET_NOTE', data: {id: noteId, asIframe:asIframe}});
     },
 
     updateNotebook: function(noteId, noteName, noteConfig) {

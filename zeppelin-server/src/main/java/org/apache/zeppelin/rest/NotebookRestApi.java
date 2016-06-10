@@ -32,6 +32,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.zeppelin.interpreter.InterpreterSetting;
 import org.apache.zeppelin.notebook.Note;
 import org.apache.zeppelin.notebook.Notebook;
@@ -460,6 +461,16 @@ public class NotebookRestApi {
     note.removeParagraph(paragraphId);
     note.persist();
     notebookServer.broadcastNote(note);
+
+
+  /*  Subject currentUser = org.apache.shiro.SecurityUtils.getSubject(); // added by xiufeng
+    if (!currentUser.isAuthenticated()) { // added by xiufeng
+      Map<String, String> data = new HashMap<>();
+      data.put("principal", "anonymous");
+      data.put("roles", "");
+      data.put("ticket", "anonymous");
+      return new JsonResponse(Status.OK, data).build();
+    }*/
 
     return new JsonResponse(Status.OK, "").build();
   }

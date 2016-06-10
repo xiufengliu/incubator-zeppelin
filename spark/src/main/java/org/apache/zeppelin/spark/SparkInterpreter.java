@@ -70,6 +70,7 @@ import scala.reflect.io.AbstractFile;
 import scala.tools.nsc.Settings;
 import scala.tools.nsc.interpreter.Completion.Candidates;
 import scala.tools.nsc.interpreter.Completion.ScalaCompleter;
+import scala.tools.nsc.settings.MutableSettings;
 import scala.tools.nsc.settings.MutableSettings.BooleanSetting;
 import scala.tools.nsc.settings.MutableSettings.PathSetting;
 
@@ -82,33 +83,33 @@ public class SparkInterpreter extends Interpreter {
 
   static {
     Interpreter.register(
-      "spark",
-      "spark",
-      SparkInterpreter.class.getName(),
-      new InterpreterPropertyBuilder()
-        .add("spark.app.name",
-          getSystemDefault("SPARK_APP_NAME", "spark.app.name", "Zeppelin"),
-          "The name of spark application.")
-        .add("master",
-          getSystemDefault("MASTER", "spark.master", "local[*]"),
-          "Spark master uri. ex) spark://masterhost:7077")
-        .add("spark.executor.memory",
-          getSystemDefault(null, "spark.executor.memory", ""),
-          "Executor memory per worker instance. ex) 512m, 32g")
-        .add("spark.cores.max",
-          getSystemDefault(null, "spark.cores.max", ""),
-          "Total number of cores to use. Empty value uses all available core.")
-        .add("zeppelin.spark.useHiveContext",
-          getSystemDefault("ZEPPELIN_SPARK_USEHIVECONTEXT",
-            "zeppelin.spark.useHiveContext", "true"),
-          "Use HiveContext instead of SQLContext if it is true.")
-        .add("zeppelin.spark.maxResult",
-          getSystemDefault("ZEPPELIN_SPARK_MAXRESULT", "zeppelin.spark.maxResult", "1000"),
-          "Max number of SparkSQL result to display.")
-        .add("args", "", "spark commandline args")
-        .add("zeppelin.spark.printREPLOutput", "true",
-          "Print REPL output")
-        .build()
+        "spark",
+        "spark",
+        SparkInterpreter.class.getName(),
+        new InterpreterPropertyBuilder()
+            .add("spark.app.name",
+                getSystemDefault("SPARK_APP_NAME", "spark.app.name", "Zeppelin"),
+                "The name of spark application.")
+            .add("master",
+                getSystemDefault("MASTER", "spark.master", "local[*]"),
+                "Spark master uri. ex) spark://masterhost:7077")
+            .add("spark.executor.memory",
+                getSystemDefault(null, "spark.executor.memory", ""),
+                "Executor memory per worker instance. ex) 512m, 32g")
+            .add("spark.cores.max",
+                getSystemDefault(null, "spark.cores.max", ""),
+                "Total number of cores to use. Empty value uses all available core.")
+            .add("zeppelin.spark.useHiveContext",
+                getSystemDefault("ZEPPELIN_SPARK_USEHIVECONTEXT",
+                    "zeppelin.spark.useHiveContext", "true"),
+                "Use HiveContext instead of SQLContext if it is true.")
+            .add("zeppelin.spark.maxResult",
+                getSystemDefault("ZEPPELIN_SPARK_MAXRESULT", "zeppelin.spark.maxResult", "1000"),
+                "Max number of SparkSQL result to display.")
+            .add("args", "", "spark commandline args")
+            .add("zeppelin.spark.printREPLOutput", "true",
+                "Print REPL output")
+            .build()
     );
   }
 
@@ -234,9 +235,9 @@ public class SparkInterpreter extends Interpreter {
   public SparkDependencyResolver getDependencyResolver() {
     if (dep == null) {
       dep = new SparkDependencyResolver(intp,
-                                   sc,
-                                   getProperty("zeppelin.dep.localrepo"),
-                                   getProperty("zeppelin.dep.additionalRemoteRepository"));
+          sc,
+          getProperty("zeppelin.dep.localrepo"),
+          getProperty("zeppelin.dep.additionalRemoteRepository"));
     }
     return dep;
   }
@@ -276,15 +277,21 @@ public class SparkInterpreter extends Interpreter {
         classServerUri = (String) classServer.invoke(interpreter.intp());
       } catch (NoSuchMethodException | SecurityException | IllegalAccessException
           | IllegalArgumentException | InvocationTargetException e) {
-        throw new InterpreterException(e);
+        // continue instead of: throw new InterpreterException(e);
+        // Newer Spark versions (like the patched CDH5.7.0 one) don't contain this method
+        logger.warn(String.format("Spark method classServerUri not available due to: [%s]",
+            e.getMessage()));
       }
     }
 
     SparkConf conf =
         new SparkConf()
             .setMaster(getProperty("master"))
-            .setAppName(getProperty("spark.app.name"))
-            .set("spark.repl.class.uri", classServerUri);
+            .setAppName(getProperty("spark.app.name"));
+
+    if (classServerUri != null) {
+      conf.set("spark.repl.class.uri", classServerUri);
+    }
 
     if (jars.length > 0) {
       conf.setJars(jars);
@@ -488,6 +495,12 @@ public class SparkInterpreter extends Interpreter {
 
     System.setProperty("scala.repl.name.line", "line" + this.hashCode() + "$");
 
+    // To prevent 'File name too long' error on some file system.
+    MutableSettings.IntSetting numClassFileSetting = settings.maxClassfileName();
+    numClassFileSetting.v_$eq(128);
+    settings.scala$tools$nsc$settings$ScalaSettings$_setter_$maxClassfileName_$eq(
+        numClassFileSetting);
+
     synchronized (sharedInterpreterLock) {
       /* create scala repl */
       if (printREPLOutput()) {
@@ -538,7 +551,7 @@ public class SparkInterpreter extends Interpreter {
       dep = getDependencyResolver();
 
       z = new ZeppelinContext(sc, sqlc, null, dep,
-              Integer.parseInt(getProperty("zeppelin.spark.maxResult")));
+          Integer.parseInt(getProperty("zeppelin.spark.maxResult")));
 
       intp.interpret("@transient var _binder = new java.util.HashMap[String, Object]()");
       binder = (Map<String, Object>) getValue("_binder");
@@ -547,13 +560,13 @@ public class SparkInterpreter extends Interpreter {
       binder.put("z", z);
 
       intp.interpret("@transient val z = "
-              + "_binder.get(\"z\").asInstanceOf[org.apache.zeppelin.spark.ZeppelinContext]");
+          + "_binder.get(\"z\").asInstanceOf[org.apache.zeppelin.spark.ZeppelinContext]");
       intp.interpret("@transient val sc = "
-              + "_binder.get(\"sc\").asInstanceOf[org.apache.spark.SparkContext]");
+          + "_binder.get(\"sc\").asInstanceOf[org.apache.spark.SparkContext]");
       intp.interpret("@transient val sqlc = "
-              + "_binder.get(\"sqlc\").asInstanceOf[org.apache.spark.sql.SQLContext]");
+          + "_binder.get(\"sqlc\").asInstanceOf[org.apache.spark.sql.SQLContext]");
       intp.interpret("@transient val sqlContext = "
-              + "_binder.get(\"sqlc\").asInstanceOf[org.apache.spark.sql.SQLContext]");
+          + "_binder.get(\"sqlc\").asInstanceOf[org.apache.spark.sql.SQLContext]");
       intp.interpret("import org.apache.spark.SparkContext._");
 
       if (sparkVersion.oldSqlContextImplicits()) {
@@ -582,11 +595,11 @@ public class SparkInterpreter extends Interpreter {
         loadFiles.invoke(this.interpreter, settings);
       } else {
         Method loadFiles = this.interpreter.getClass().getMethod(
-                "org$apache$spark$repl$SparkILoop$$loadFiles", Settings.class);
+            "org$apache$spark$repl$SparkILoop$$loadFiles", Settings.class);
         loadFiles.invoke(this.interpreter, settings);
       }
     } catch (NoSuchMethodException | SecurityException | IllegalAccessException
-            | IllegalArgumentException | InvocationTargetException e) {
+        | IllegalArgumentException | InvocationTargetException e) {
       throw new InterpreterException(e);
     }
 
@@ -711,7 +724,7 @@ public class SparkInterpreter extends Interpreter {
       completionStartPosition = completionEndPosition - completionStartPosition;
     }
     resultCompletionText = completionScriptText.substring(
-            completionStartPosition , completionEndPosition);
+        completionStartPosition , completionEndPosition);
 
     return resultCompletionText;
   }
@@ -783,9 +796,9 @@ public class SparkInterpreter extends Interpreter {
         String nextLine = linesToRun[l + 1].trim();
         boolean continuation = false;
         if (nextLine.isEmpty()
-           || nextLine.startsWith("//")         // skip empty line or comment
-           || nextLine.startsWith("}")
-           || nextLine.startsWith("object")) {  // include "} object" for Scala companion object
+            || nextLine.startsWith("//")         // skip empty line or comment
+            || nextLine.startsWith("}")
+            || nextLine.startsWith("object")) {  // include "} object" for Scala companion object
           continuation = true;
         } else if (!inComment && nextLine.startsWith("/*")) {
           inComment = true;
@@ -794,9 +807,9 @@ public class SparkInterpreter extends Interpreter {
           inComment = false;
           continuation = true;
         } else if (nextLine.length() > 1
-                && nextLine.charAt(0) == '.'
-                && nextLine.charAt(1) != '.'     // ".."
-                && nextLine.charAt(1) != '/') {  // "./"
+            && nextLine.charAt(0) == '.'
+            && nextLine.charAt(1) != '.'     // ".."
+            && nextLine.charAt(1) != '/') {  // "./"
           continuation = true;
         } else if (inComment) {
           continuation = true;
@@ -994,7 +1007,7 @@ public class SparkInterpreter extends Interpreter {
   @Override
   public Scheduler getScheduler() {
     return SchedulerFactory.singleton().createOrGetFIFOScheduler(
-      SparkInterpreter.class.getName() + this.hashCode());
+        SparkInterpreter.class.getName() + this.hashCode());
   }
 
   public ZeppelinContext getZeppelinContext() {
